@@ -41,6 +41,30 @@ class ConfigurationCommandController extends CommandController implements Single
 	 */
 	protected $configurationManager;
 
+
+	/**
+	 * Adds a system configuration by path
+	 *
+	 * Example: ./typo3cms configuration:addbypath --path="DB/database" --value="myDatabase"
+	 *
+	 * @param string $path Path to system configuration that should be added. 
+	 * @param string $force If set, do not ask for confirmation
+	 */
+	public function addByPathCommand($path='',$value='') {
+		$args = $this->request->getArguments();
+
+		$path = $args['path'];
+		$value = $args['value'];
+
+		$added = $this->configurationManager->setLocalConfigurationValueByPath($path,$value);
+
+		if (!$added) {
+			$this->outputLine('Paths seems invalid or empty. Nothing done!');
+			$this->sendAndExit(1);
+		}
+		$this->outputLine('Added to system configuration');
+	}
+
 	/**
 	 * Removing system configuration by path
 	 *
